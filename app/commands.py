@@ -32,10 +32,8 @@ def authorization(user_id: int) -> bool:
 
 
 def generate_password(length=8):
-    # Символы для пароля
-    characters = string.ascii_letters + string.digits  # Буквы (a-z, A-Z) и цифры (0-9)
+    characters = string.ascii_letters + string.digits
 
-    # Генерация случайного пароля
     password = ''.join(random.choice(characters) for _ in range(length))
 
     return password
@@ -50,7 +48,6 @@ def generate_ssr(port, password):
     return f"ssr://{base64.urlsafe_b64encode(user_info.encode()).decode().strip('=')}"
 
 
-# Получение активных подключений
 def get_connections():
     try:
         result = subprocess.run(['netstat', '-an'], capture_output=True, text=True, timeout=5)
@@ -71,25 +68,21 @@ def get_connected_ips(port):
         text=True
     )
 
-    # Проверяем на ошибки выполнения команды
     if result.stderr:
         print("Error:", result.stderr)
         return []
 
-    # Регулярное выражение для извлечения IP-адреса из 5-й колонки
     ip_pattern = r'(\d+\.\d+\.\d+\.\d+)|\[::ffff:(\d+\.\d+\.\d+\.\d+)\]'
 
     ips = []
     for line in result.stdout.splitlines():
         columns = line.split()
-        if len(columns) >= 5:  # Убедимся, что колонка существует
+        if len(columns) >= 5:
             remote_address = columns[4]
             match = re.search(ip_pattern, remote_address)
             if match:
-                # Берём либо чистый IPv4, либо IPv4 в оболочке
                 ips.append(match.group(1) or match.group(2))
 
-    # Убираем дубли и возвращаем только уникальные IP-адреса
     return set(ips)
 
 
@@ -97,11 +90,11 @@ def get_ip_info(ip_address):
     url = f"https://api.iplocation.net/?ip={ip_address}"
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Проверка на успешный статус ответа (200)
-        data = response.json()  # Преобразование JSON-ответа в словарь
+        response.raise_for_status()
+        data = response.json()
 
         if data.get("response_code") == "200":
-            return data  # Возвращаем данные, если запрос выполнен успешно
+            return data
         else:
             print(f"Error: {data.get('response_message')}")
             return None

@@ -235,7 +235,6 @@ async def active_connections_command(message: types.Message):
     connections = get_connections()
     user_ports = await database_cmd.get_user_ports()
 
-    # Парсим netstat для поиска IP:порт
     pattern = r"\b(?:\d{1,3}\.){3}\d{1,3}\b:\b\d+\b"
     matches = re.findall(pattern, connections)
 
@@ -255,7 +254,6 @@ async def active_connections_command(message: types.Message):
             if str(port) in ip and ip not in cur_ip:
                 cur_ip.append(ip)
 
-    # Формируем отчет
     for user in cur_ip:
         for cur_port in user_ports:
             if str(cur_port) in user:
