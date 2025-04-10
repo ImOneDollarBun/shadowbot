@@ -81,7 +81,6 @@ def get_connected_ips(port):
 
     ips = []
     for line in result.stdout.splitlines():
-        # Берём 5-ю колонку (разделитель — пробел)
         columns = line.split()
         if len(columns) >= 5:  # Убедимся, что колонка существует
             remote_address = columns[4]
