@@ -21,7 +21,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd /usr/bot/
-          git pull origin main
+          git fetch origin
+          gir reset --hard origin/main
           source venv/bin/activate
           pip install -r requirements.txt
           sudo systemctl restart ssr_bot.service
