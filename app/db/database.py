@@ -6,8 +6,8 @@ DATABASE_URL = settings.Db.url
 
 
 class SQLBase:
-    def __init__(self):
-        self.url = DATABASE_URL
+    def __init__(self, url=DATABASE_URL):
+        self.url = url
 
     async def create_db(self):
         async with aiosql.connect(self.url) as conn:
