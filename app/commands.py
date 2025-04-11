@@ -25,7 +25,7 @@ COMMANDS = ['/online',
             '/stats | <-h -d -m>',
             '/mark <port> <info>',
             '/start',
-            '/log | clear']
+            '/log | clean']
 
 
 def authorization(user_id: int) -> bool:

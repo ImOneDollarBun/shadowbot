@@ -57,7 +57,7 @@ async def logout(message: types.Message):
                 await message.answer(f'{file[-10:]}')
             else:
                 await message.answer(f'{[x for x in file]}')
-    elif args[0] == 'clear':
+    elif args[0] == 'clean':
         clean_logs = ['rm', settings.Global.log_file]
         touch_logs = ['touch', settings.Global.log_file]
         execute_cmd(command=clean_logs)
