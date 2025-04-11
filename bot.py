@@ -2,7 +2,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from settings import settings
-from app.handlers import rout
+from app.core import router
 
 from app.db.database import SQLBase
 
@@ -12,7 +12,7 @@ API_TOKEN = settings.Secure.API_KEY
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
-dp.include_router(rout)
+dp.include_router(router)
 
 
 async def main():
