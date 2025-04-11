@@ -23,8 +23,7 @@ class SQLBase:
     async def update_port_mark(self, port, mark):
         async with aiosql.connect(self.url) as conn:
             cursor = await conn.cursor()
-            await cursor.execute("UPDATE users SET mark = ? WHERE port = ?", (mark, port))
-            return
+            return await cursor.execute("UPDATE users SET mark = ? WHERE port = ?", (mark, port))
 
     async def find_mark_by_port(self, port):
         async with aiosql.connect(self.url) as conn:
