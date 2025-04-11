@@ -12,6 +12,7 @@ from functools import wraps
 rout = Router()
 db = SQLBase(settings.Db.url)
 
+
 def authorized_only(func):
     @wraps(func)
     async def wrapper(message: types.Message, *args, **kwargs):

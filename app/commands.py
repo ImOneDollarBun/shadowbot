@@ -36,7 +36,6 @@ def authorization(user_id: int) -> bool:
 
 def generate_password(length=8):
     characters = string.ascii_letters + string.digits
-
     password = ''.join(random.choice(characters) for _ in range(length))
 
     return password
@@ -51,7 +50,6 @@ def generate_qr_code(data: str) -> BufferedInputFile:
         img = qr.make_image(fill_color="black", back_color="white")
         img.save(buffer)
         buffer.seek(0)
-
         return BufferedInputFile(buffer.read(), filename="qr_code.png")
 
 
