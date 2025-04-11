@@ -6,12 +6,11 @@ from aiogram.filters import Command
 from aiogram import types, Router
 
 from app.db.database import SQLBase
-from bot import sq
 
 from functools import wraps
 
 rout = Router()
-db = sq
+db_cmd = SQLBase(settings.Db.url)
 
 
 def authorized_only(func):
@@ -93,7 +92,7 @@ async def markup(message: types.Message):
 @rout.message(Command("start"))
 @authorized_only
 async def send_welcome(message: types.Message):
-    await db.create_db()
+    await db_cmd.create_db()
     await message.reply("Привет!")
 
 
@@ -126,14 +125,14 @@ async def port_de_acivate(message: types.Message):
                             check=True)
             await message.reply(f"Порт `{port}` заблокирован", parse_mode='Markdown')
 
-            await db.update_flag_by_port(port, flag)
+            await db_cmd.update_flag_by_port(port, flag)
 
         elif flag == "0":
             subprocess.run(["sudo", "iptables", "-D", "INPUT", "-p", "tcp", "--dport", port, "-j", "DROP"],
                             check=True)
             await message.reply(f"Порт `{port}` разблокирован", parse_mode='Markdown')
 
-            await db.update_flag_by_port(port, flag)
+            await db_cmd.update_flag_by_port(port, flag)
 
     except subprocess.CalledProcessError as e:
         await message.reply(f"Ошибка выполнения команды: {e}")
@@ -148,7 +147,7 @@ async def generate_ssr_link(message: types.Message):
 
     try:
         port = args[-1]
-        ssr_key = await db.get_ssr(port)
+        ssr_key = await db_cmd.get_ssr(port)
 
         if args[0] == "qr":
             photo = generate_qr_code(ssr_key)
@@ -171,11 +170,11 @@ async def add_user_command(message: types.Message):
             return
 
         port = int(args[0])  # Извлечение порта из списка и преобразование в целое число
-        if port in await db.get_user_ports():
+        if port in await db_cmd.get_user_ports():
             await message.reply(f"Пользователь с портом `{port}` уже есть.", parse_mode='Markdown')
             return
 
-        password = await db.add_user(port)
+        password = await db_cmd.add_user(port)
         await message.reply(f"Пользователь добавлен: с портом `{port}` и паролем `{password}`",
                                 parse_mode="Markdown")
     except ValueError:
@@ -195,7 +194,7 @@ async def remove_user_command(message: types.Message):
 
     try:
         port = int(args[0])
-        await db.remove_user(port)
+        await db_cmd.remove_user(port)
         await message.reply(f"Пользователь с портом `{port}` удален!", parse_mode='Markdown')
     except ValueError:
         await message.reply("Ошибка: порт должен быть числом.")
@@ -204,7 +203,7 @@ async def remove_user_command(message: types.Message):
 @rout.message(Command("listusers"))
 @authorized_only
 async def list_users_command(message: types.Message):
-    users = await db.list_users()
+    users = await db_cmd.list_users()
     if users:
         user_list = "\n".join([f"Порт: `{user[1]}` "
                                    f"Пароль: `{user[2]}` "
@@ -219,7 +218,7 @@ async def list_users_command(message: types.Message):
 @authorized_only
 async def active_connections_command(message: types.Message):
     connections = get_connections()
-    user_ports = await db.get_user_ports()
+    user_ports = await db_cmd.get_user_ports()
 
     pattern = r"\b(?:\d{1,3}\.){3}\d{1,3}\b:\b\d+\b"
     matches = re.findall(pattern, connections)
@@ -244,7 +243,7 @@ async def active_connections_command(message: types.Message):
         for cur_port in user_ports:
             if str(cur_port) in user:
                 device_counts = len(get_connected_ips(cur_port))
-                user_mark = await db.find_mark_by_port(cur_port)
+                user_mark = await db_cmd.find_mark_by_port(cur_port)
 
                 raport.append(f"Адрес: `{user}`\n"
                                   f"Пользователь: `{user_mark}`\n"

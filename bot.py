@@ -2,21 +2,21 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from settings import settings
-from app.db.database import SQLBase
 from app.handlers import rout
+
+from app.db.database import SQLBase
 
 
 API_TOKEN = settings.Secure.API_KEY
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
-sq = SQLBase(settings.Db.url)
 
 dp.include_router(rout)
 
 
 async def main():
-    await sq.create_db()
+    await SQLBase(settings.Db.url).create_db()
     await dp.start_polling(bot)
 
 
