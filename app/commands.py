@@ -1,8 +1,11 @@
 import base64
 import subprocess
 import re
+from io import BytesIO
 
+import qrcode
 import requests
+from aiogram.types import BufferedInputFile
 
 from settings import settings
 
@@ -37,6 +40,19 @@ def generate_password(length=8):
     password = ''.join(random.choice(characters) for _ in range(length))
 
     return password
+
+
+def generate_qr_code(data: str) -> BufferedInputFile:
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+        qr.add_data(data)
+        qr.make(fit=True)
+
+        buffer = BytesIO()
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(buffer)
+        buffer.seek(0)
+
+        return BufferedInputFile(buffer.read(), filename="qr_code.png")
 
 
 def generate_ssr(port, password):

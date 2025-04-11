@@ -9,9 +9,6 @@ from app.db.database import SQLBase
 
 from functools import wraps
 
-import qrcode
-from io import BytesIO
-
 rout = Router()
 database_cmd = SQLBase()
 
@@ -146,18 +143,6 @@ async def port_de_acivate(message: types.Message):
 @rout.message(Command("ssr"))
 @authorized_only
 async def generate_ssr_link(message: types.Message):
-    async def generate_qr_code(data: str) -> BufferedInputFile:
-        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
-        qr.add_data(data)
-        qr.make(fit=True)
-
-        buffer = BytesIO()
-        img = qr.make_image(fill_color="black", back_color="white")
-        img.save(buffer)
-        buffer.seek(0)
-
-        return BufferedInputFile(buffer.read(), filename="qr_code.png")
-
     args = message.text.replace("/ssr", "").strip().split()
 
     try:
@@ -165,7 +150,7 @@ async def generate_ssr_link(message: types.Message):
         ssr_key = await database_cmd.get_ssr(port)
 
         if args[0] == "qr":
-            photo = await generate_qr_code(ssr_key)
+            photo = generate_qr_code(ssr_key)
             await message.answer_photo(photo)
         elif args[0] == "key":
             await message.reply(f'`{ssr_key}`', parse_mode="Markdown")

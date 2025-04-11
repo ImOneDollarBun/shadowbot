@@ -15,7 +15,6 @@ sq = SQLBase()
 dp.include_router(rout)
 
 
-
 async def main():
     await sq.create_db()
     await dp.start_polling(bot)

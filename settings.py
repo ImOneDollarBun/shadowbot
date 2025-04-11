@@ -17,5 +17,7 @@ class Settings:
         log_file = 'logout.txt'
         common_out = 'nohup.out'
 
+        qr_path = 'qrcode'
+
 
 settings = Settings()
