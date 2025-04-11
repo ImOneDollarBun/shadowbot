@@ -85,8 +85,9 @@ async def get_ips(message: types.Message):
 @rout.message(Command("mark"))
 @authorized_only
 async def markup(message: types.Message):
-    args = message.text.replace("/mark", "").strip().split()
-    port = args[0]
+    args = message.text.replace("/mark", "").split()
+    await message.answer(f'{args}')
+    port = int(args[0])
     mark = ' '.join(str(x) for x in args[1:])
 
     await message.answer(f'{port, mark, args}')
