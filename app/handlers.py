@@ -93,7 +93,7 @@ async def markup(message: types.Message):
         await message.reply("Ошибка формата. Правильное применение /mark <port> <info>")
         return
 
-    await SQLBase.update_port_mark(port, mark)
+    await db_cmd.update_port_mark(port, mark)
 
     await message.reply(f"Пользователь с портом `{port}` обновил метку на `{mark}`", parse_mode='Markdown')
 
