@@ -1,16 +1,17 @@
 import os
 
-from aiogram.types import BufferedInputFile, FSInputFile
+from aiogram.types import FSInputFile
 from app.commands import *
 from aiogram.filters import Command
 from aiogram import types, Router
 
 from app.db.database import SQLBase
+from bot import sq
 
 from functools import wraps
 
 rout = Router()
-db = SQLBase(settings.Db.url)
+db = sq
 
 
 def authorized_only(func):

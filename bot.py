@@ -10,7 +10,7 @@ API_TOKEN = settings.Secure.API_KEY
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
-sq = SQLBase()
+sq = SQLBase(settings.Db.url)
 
 dp.include_router(rout)
 
