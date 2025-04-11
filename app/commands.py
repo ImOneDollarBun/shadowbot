@@ -15,7 +15,7 @@ import string
 DATABASE_URL = settings.Db.url
 
 COMMANDS = ['/online',
-            '/cm <command>',
+            '/cm <command> | dnw',
             '/listusers',
             '/ips <port>',
             '/adduser <port>',
