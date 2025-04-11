@@ -1,12 +1,9 @@
 import aiosqlite as aiosql
-from settings import settings
 from app.commands import generate_ssr, generate_password
-
-DATABASE_URL = settings.Db.url
 
 
 class SQLBase:
-    def __init__(self, url=DATABASE_URL):
+    def __init__(self, url):
         self.url = url
 
     async def create_db(self):
