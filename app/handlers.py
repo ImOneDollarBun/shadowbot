@@ -48,12 +48,22 @@ async def execute(message: types.Message):
 @rout.message(Command('log'))
 @authorized_only
 async def logout(message: types.Message):
-    with open(settings.Global.log_file, 'r') as file:
-        file = [x for x in file.readlines()]
-        if len(file) >= 11:
-            await message.answer(f'{file[-10:]}')
-        else:
-            await message.answer(f'{[x for x in file]}')
+    args = message.text.replace('/log', '').split()
+
+    if not args:
+        with open(settings.Global.log_file, 'r') as file:
+            file = [x for x in file.readlines()]
+            if len(file) >= 11:
+                await message.answer(f'{file[-10:]}')
+            else:
+                await message.answer(f'{[x for x in file]}')
+    elif args[0] == 'clear':
+        clean_logs = ['rm', settings.Global.log_file]
+        touch_logs = ['touch', settings.Global.log_file]
+        execute_cmd(command=clean_logs)
+        execute_cmd(command=touch_logs)
+        await message.answer('Логи почищены')
+
 
 
 @rout.message(Command('commands'))
