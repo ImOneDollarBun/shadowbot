@@ -89,6 +89,7 @@ async def markup(message: types.Message):
     port = args[0]
     mark = ' '.join(str(x) for x in args[1:])
 
+    await message.answer(f'{port, mark, args}')
     if len(args) < 2:
         await message.reply("Ошибка формата. Правильное применение /mark <port> <info>")
         return
