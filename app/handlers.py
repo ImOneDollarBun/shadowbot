@@ -65,7 +65,6 @@ async def logout(message: types.Message):
         await message.answer('Логи почищены')
 
 
-
 @rout.message(Command('commands'))
 @authorized_only
 async def commands(message: types.Message):
