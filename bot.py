@@ -15,6 +15,7 @@ dp = Dispatcher()
 dp.include_router(router)
 
 
+
 async def main():
     await SQLBase(settings.Db.url).create_db()
     await dp.start_polling(bot)
